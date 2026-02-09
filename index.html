@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إلى نادين 💖</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+        :root {
+            --bg-color: #fff0f3;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text-color: #c9184a;
+            --accent-color: #ff4d6d;
+            --input-bg: #fff0f3;
+        }
+
+        body.dark-mode {
+            --bg-color: #1a1a1a;
+            --card-bg: rgba(45, 45, 45, 0.95);
+            --text-color: #ffb3c1;
+            --accent-color: #ff758f;
+            --input-bg: #333;
+        }
+
+        * { box-sizing: border-box; transition: background 0.5s, color 0.5s; }
+        body, html {
+            margin: 0; padding: 0; min-height: 100vh; width: 100%;
+            font-family: 'Cairo', sans-serif; overflow-x: hidden;
+            background-color: var(--bg-color);
+        }
+
+        #dynamic-bg {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(rgba(255, 192, 203, 0.4), rgba(255, 182, 193, 0.4)), 
+                        url('https://i.ibb.co/Rk98J7PP/Screenshot-6012fa4d4ddec268fc5c7112cbb265e7.jpg') no-repeat center center;
+            background-size: cover; z-index: -2;
+        }
+
+        #lock-screen {
+            position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+            z-index: 10000; background: var(--bg-color); transition: 0.8s;
+        }
+
+        .welcome-box {
+            background: var(--card-bg); padding: 30px; border-radius: 30px;
+            border: 4px dashed var(--accent-color); width: 92%; max-width: 450px; text-align: center;
+        }
+
+        .long-message { color: var(--text-color); font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px; font-weight: bold; }
+        .hint-text { color: var(--accent-color); font-weight: bold; font-size: 1.3rem; margin-bottom: 15px; display: block; }
+
+        input#password-input {
+            background: var(--input-bg); border-radius: 15px; padding: 15px; width: 90%; 
+            font-weight: bold; text-align: center; border: 2px solid var(--accent-color); color: var(--text-color); outline: none;
+        }
+
+        #main-content { display: none; padding-top: 40px; text-align: center; }
+
+        .message-card {
+            background: var(--card-bg); margin: 0 auto 20px; padding: 25px;
+            border-radius: 25px; border: 3px solid var(--accent-color); width: 90%; max-width: 500px;
+        }
+
+        .typing-container { font-size: 1.8rem; font-weight: bold; color: var(--accent-color); min-height: 50px; }
+
+        .sudoku-cell {
+            width: 55px; height: 55px; background: var(--input-bg); border: 2px solid var(--accent-color);
+            border-radius: 12px; text-align: center; color: var(--text-color); font-weight: bold; font-size: 1.4rem;
+        }
+        .sudoku-cell:disabled { background: var(--accent-color); color: white; }
+
+        button.check-btn {
+            background: var(--accent-color); color: white; border: none; padding: 12px 30px;
+            border-radius: 50px; cursor: pointer; font-weight: bold;
+        }
+
+        /* تنسيق رسالة اشطر كتكوته */
+        #win-modal {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+            z-index: 20000; align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background: white; padding: 40px; border-radius: 30px; text-align: center;
+            border: 5px solid #ff4d6d; animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+
+        #dark-mode-toggle { position: fixed; top: 15px; right: 15px; font-size: 1.5rem; cursor: pointer; z-index: 10001; opacity: 0.5; }
+        .heart { position: fixed; color: var(--accent-color); pointer-events: none; animation: fall linear forwards; z-index: 999; }
+        @keyframes fall { to { transform: translateY(105vh); opacity: 0; } }
+
+        #victory-video-container {
+            display: none; margin: 20px auto; width: 90%; max-width: 350px;
+            border: 6px solid #fff; border-radius: 25px; overflow: hidden; height: 500px;
+        }
+        iframe { width: 100%; height: 100%; border: none; }
+        .fixed-photos img { width: 100px; height: 140px; border: 4px solid #fff; border-radius: 15px; object-fit: cover; margin: 5px;}
+    </style>
+</head>
+<body>
+
+    <div id="dark-mode-toggle" onclick="toggleDarkMode()">🌙</div>
+    <div id="dynamic-bg"></div>
+    <audio id="bg-audio" loop src="https://www.mboxdrive.com/Tamer%20Hosny%20-%20Bahebak.mp3"></audio>
+
+    <div id="win-modal">
+        <div class="modal-content">
+            <h1 style="color: #ff4d6d; font-size: 2.5rem; margin-bottom: 20px;">اشطر كتكوته ❤️</h1>
+            <p style="font-weight: bold; color: #c9184a;">عرفت إنك ذكية وهتحليها! يالّا شوفي المفاجأة..</p>
+            <button class="check-btn" style="margin-top: 20px;" onclick="showVideo()">شكراً يا حبيبي ✨</button>
+        </div>
+    </div>
+
+    <div id="lock-screen">
+        <div class="welcome-box">
+            <div class="long-message">كل عيد حب وانتي كل حياتي وحبيبتي وروحي يا احلى واجمل حاجه في الدنيا ♥ إنتي مش بس حبيبتي، إنتي دنيتي كلها.. ربنا يخليكي ليا يا حبيبتي. ❤️</div>
+            <label for="password-input" class="hint-text">كلمة السر سهلة يا نادين</label>
+            <input type="password" id="password-input" placeholder="اكتبيها هنا..." oninput="checkPass(this.value)">
+        </div>
+    </div>
+
+    <div id="main-content">
+        <div class="message-card">
+            <div class="typing-container" id="dynamic-text"></div>
+            <p id="sub-text" style="display:none; font-weight: bold; color: var(--accent-color); margin-top:10px;">كل عيد حب وإحنا مع بعض يا نادين ❤️</p>
+        </div>
+
+        <div class="fixed-photos">
+            <img src="https://i.ibb.co/WN7ZxWM7/Screenshot-6012fa4d4ddec268fc5c7112cbb265e7.jpg">
+            <img src="https://i.ibb.co/Rk98J7PP/Screenshot-6012fa4d4ddec268fc5c7112cbb265e7.jpg">
+            <img src="https://i.ibb.co/tpQykgWq/Screenshot-6012fa4d4ddec268fc5c7112cbb265e7.jpg">
+        </div>
+
+        <div id="puzzle-section" class="message-card">
+            <p style="color: var(--text-color); font-weight: bold; margin-bottom: 15px;">حلي السودوكو دي عشان تشوفي الهدية 😉</p>
+            <div id="sudoku-container" style="display: grid; grid-template-columns: repeat(4, 55px); gap: 8px; justify-content: center; margin-bottom: 20px;"></div>
+            <button class="check-btn" onclick="validateSudoku()">تحقق من الحل ✨</button>
+        </div>
+
+        <div id="victory-video-container">
+            <iframe id="drive-video" src="" allow="autoplay"></iframe>
+        </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('bg-audio');
+        audio.volume = 0.2;
+        let currentSolution = [];
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const btn = document.getElementById('dark-mode-toggle');
+            btn.innerText = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        }
+
+        function checkPass(val) {
+            if (val.toUpperCase() === 'KOKA') {
+                audio.play().catch(e => {});
+                document.getElementById('lock-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                generateRandomSudoku();
+                startTypingSequence();
+                startHearts();
+            }
+        }
+
+        function generateRandomSudoku() {
+            const container = document.getElementById('sudoku-container');
+            container.innerHTML = '';
+            let base = [[1,2,3,4],[3,4,1,2],[2,3,4,1],[4,1,2,3]];
+            let nums = [1,2,3,4].sort(() => Math.random() - 0.5);
+            currentSolution = base.map(row => row.map(cell => nums[cell-1]));
+            for (let r=0; r<4; r++) {
+                for (let c=0; c<4; c++) {
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.className = 'sudoku-cell';
+                    input.id = `cell-${r}-${c}`;
+                    if (Math.random() > 0.6) { input.value = currentSolution[r][c]; input.disabled = true; }
+                    container.appendChild(input);
+                }
+            }
+        }
+
+        function validateSudoku() {
+            let correct = true;
+            for(let r=0; r<4; r++) {
+                for(let c=0; c<4; c++) {
+                    if(document.getElementById(`cell-${r}-${c}`).value != currentSolution[r][c]) correct = false;
+                }
+            }
+            if(correct) {
+                // بدلاً من إظهار الفيديو فوراً، نظهر الرسالة أولاً
+                document.getElementById('win-modal').style.display = 'flex';
+            } else { alert("ركزي يا نادين ❤️"); }
+        }
+
+        function showVideo() {
+            document.getElementById('win-modal').style.display = 'none';
+            document.getElementById('puzzle-section').style.display = 'none';
+            document.getElementById('drive-video').src = "https://drive.google.com/file/d/11M6nmByQP-JTcJZG6NZ8OhlMDx0e7OUt/preview";
+            document.getElementById('victory-video-container').style.display = 'block';
+            audio.pause(); // إيقاف الموسيقى لتسمع الفيديو
+        }
+
+        async function startTypingSequence() {
+            const el = document.getElementById('dynamic-text');
+            let t1 = "بحبك يا جزمة 🌝";
+            for(let i=0; i<=t1.length; i++) { el.innerText = t1.slice(0, i); await new Promise(r => setTimeout(r, 100)); }
+            await new Promise(r => setTimeout(r, 1000));
+            for(let i=t1.length; i>=8; i--) { el.innerText = t1.slice(0, i); await new Promise(r => setTimeout(r, 50)); }
+            let t2 = "روحي 😘";
+            let base = "بحبك يا ";
+            for(let i=0; i<=t2.length; i++) { el.innerText = base + t2.slice(0, i); await new Promise(r => setTimeout(r, 100)); }
+            document.getElementById('sub-text').style.display = 'block';
+        }
+
+        function startHearts() {
+            setInterval(() => {
+                const h = document.createElement('div');
+                h.innerHTML = '❤'; h.className = 'heart';
+                h.style.left = Math.random() * 100 + 'vw';
+                h.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                document.body.appendChild(h);
+                setTimeout(() => h.remove(), 4000);
+            }, 300);
+        }
+    </script>
+</body>
+</html>
