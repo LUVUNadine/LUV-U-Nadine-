@@ -108,14 +108,14 @@
         <div class="modal-content">
             <h1 style="color: #ff4d6d; font-size: 2.5rem; margin-bottom: 20px;">اشطر كتكوته ❤️</h1>
             <p style="font-weight: bold; color: #c9184a;">عرفت إنك ذكية وهتحليها! يالّا شوفي المفاجأة..</p>
-            <button class="check-btn" style="margin-top: 20px;" onclick="showVideo()">شكراً يا حبيبي ✨</button>
+            <button class="check-btn" style="margin-top: 20px;" onclick="showVideo()"> بحبك ✨</button>
         </div>
     </div>
 
     <div id="lock-screen">
         <div class="welcome-box">
             <div class="long-message">كل عيد حب وانتي كل حياتي وحبيبتي وروحي يا احلى واجمل حاجه في الدنيا ♥ إنتي مش بس حبيبتي، إنتي دنيتي كلها.. ربنا يخليكي ليا يا حبيبتي. ❤️</div>
-            <label for="password-input" class="hint-text">كلمة السر سهلة يا نادين</label>
+            <label for="password-input" class="hint-text">😂 كلمة السر سهلة يا نادين</label>
             <input type="password" id="password-input" placeholder="اكتبيها هنا..." oninput="checkPass(this.value)">
         </div>
     </div>
@@ -193,7 +193,7 @@
             if(correct) {
                 // بدلاً من إظهار الفيديو فوراً، نظهر الرسالة أولاً
                 document.getElementById('win-modal').style.display = 'flex';
-            } else { alert("ركزي يا نادين ❤️"); }
+            } else { alert(" 😂ركزي يا جزمه ❤️"); }
         }
 
         function showVideo() {
@@ -210,7 +210,7 @@
             for(let i=0; i<=t1.length; i++) { el.innerText = t1.slice(0, i); await new Promise(r => setTimeout(r, 100)); }
             await new Promise(r => setTimeout(r, 1000));
             for(let i=t1.length; i>=8; i--) { el.innerText = t1.slice(0, i); await new Promise(r => setTimeout(r, 50)); }
-            let t2 = "روحي 😘";
+            let t2 = "كوكا 😘";
             let base = "بحبك يا ";
             for(let i=0; i<=t2.length; i++) { el.innerText = base + t2.slice(0, i); await new Promise(r => setTimeout(r, 100)); }
             document.getElementById('sub-text').style.display = 'block';
