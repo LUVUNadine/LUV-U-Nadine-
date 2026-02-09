@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💖 نادين الكتكوتة 💖</title>
+    
+    <link rel="icon" type="image/jpeg" href="https://i.ibb.co/1JtLHJ7K/IMG-20251101-WA0024.jpg">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+
+        :root {
+            --bg-overlay: rgba(255, 240, 243, 0.7);
+            --card-bg: #ffffff;
+            --text-color: #ff4d6d; /* اللون الوردي الأساسي */
+            --dark-text: #333333; /* النص الغامق العادي */
+            --accent-color: #ff758f;
+            --border-color: #ffb3c1;
+            --input-bg: #fff0f3;
+            --body-bg: url('https://i.ibb.co/99gVS3jP/Messenger-creation-E5659656-AC7-A-4-DEF-9-F03-08-A9-C01-B0-DDA.jpg');
+        }
+
+        /* تعديلات الوضع الليلي */
+        [data-theme="dark"] {
+            --bg-overlay: rgba(20, 20, 30, 0.9);
+            --card-bg: #2d2d3a;
+            --text-color: #ff85a1;
+            --dark-text: #ffffff; /* تحويل النص الأسود إلى أبيض في الوضع الليلي */
+            --accent-color: #ff4d6d;
+            --border-color: #45455a;
+            --input-bg: #1a1a24;
+        }
+
+        * { box-sizing: border-box; transition: all 0.4s ease; }
+        
+        body, html {
+            margin: 0; padding: 0; min-height: 100vh; width: 100%;
+            font-family: 'Cairo', sans-serif; overflow-x: hidden;
+            background: var(--body-bg) no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .overlay { position: fixed; inset: 0; background: var(--bg-overlay); z-index: -1; }
+
+        .theme-toggle {
+            position: fixed; top: 20px; left: 20px; z-index: 20001;
+            background: var(--accent-color); color: white; border: none;
+            width: 50px; height: 50px; border-radius: 50%; cursor: pointer;
+            font-size: 1.5rem; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: 3px solid white;
+        }
+
+        #lock-screen, #story-screen {
+            position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+            z-index: 10000; transition: 0.8s;
+        }
+
+        #story-screen { display: none; background: rgba(255, 182, 193, 0.9); z-index: 10001; }
+        [data-theme="dark"] #story-screen { background: rgba(30, 30, 45, 0.95); }
+
+        .cartoon-card {
+            background: var(--card-bg); padding: 30px; border-radius: 40px;
+            border: 8px solid var(--accent-color); box-shadow: 0 15px 0 var(--border-color);
+            width: 90%; max-width: 450px; text-align: center; position: relative;
+            color: var(--dark-text); /* يستخدم المتغير الجديد ليتغير للأبيض */
+        }
+
+        .cartoon-card::before, .cartoon-card::after {
+            content: ''; position: absolute; top: -30px; width: 60px; height: 60px;
+            background: var(--accent-color); border-radius: 50%; z-index: -1;
+        }
+        .cartoon-card::before { left: 40px; }
+        .cartoon-card::after { right: 40px; }
+
+        .story-img { 
+            width: 100%; border-radius: 25px; border: 5px solid var(--accent-color); 
+            margin-bottom: 15px; display: none; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+
+        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .long-message { color: var(--text-color); font-size: 1.1rem; font-weight: 900; line-height: 1.6; margin-bottom: 20px; }
+        
+        input#password-input {
+            background: var(--input-bg); border-radius: 20px; padding: 15px; width: 85%; 
+            font-weight: bold; text-align: center; border: 4px solid var(--border-color); 
+            color: var(--dark-text); outline: none; font-size: 1.2rem;
+        }
+
+        #main-content { display: none; padding: 80px 0 20px; text-align: center; }
+
+        .message-card {
+            background: var(--card-bg); margin: 0 auto 30px; padding: 25px;
+            border-radius: 40px; border: 6px solid var(--accent-color); width: 90%; max-width: 500px;
+            box-shadow: 0 10px 0 var(--border-color);
+            color: var(--dark-text);
+        }
+
+        .typing-container { font-size: 1.8rem; font-weight: 900; color: var(--accent-color); min-height: 50px; }
+
+        .sudoku-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-width: 280px; margin: 0 auto 25px; }
+
+        .sudoku-cell {
+            aspect-ratio: 1/1; background: var(--input-bg); border: 3px solid var(--accent-color);
+            border-radius: 12px; text-align: center; color: var(--dark-text); font-weight: 900; font-size: 1.2rem; width: 100%;
+        }
+        .sudoku-cell:disabled { background: var(--accent-color); color: white; }
+
+        button.check-btn {
+            background: var(--accent-color); color: white; border: none; padding: 12px 30px;
+            border-radius: 25px; cursor: pointer; font-weight: 900; font-size: 1rem;
+            box-shadow: 0 6px 0 #c9184a;
+        }
+
+        #victory-video-container {
+            display: none; margin: 20px auto; width: 90%; max-width: 380px;
+            border: 8px solid var(--accent-color); border-radius: 30px; 
+            overflow: hidden; position: relative; 
+            background: #000; box-shadow: 0 15px 0 var(--border-color);
+        }
+
+        .video-wrapper { position: relative; padding-bottom: 177.77%; height: 0; }
+        #drive-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        #win-modal {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            z-index: 20000; align-items: center; justify-content: center;
+        }
+
+        .heart { position: fixed; color: #ff4d6d; pointer-events: none; animation: fall linear forwards; z-index: 999; }
+        @keyframes fall { to { transform: translateY(105vh) rotate(360deg); opacity: 0; } }
+    </style>
+</head>
+<body id="body-tag">
+
+    <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙</button>
+    <div class="overlay"></div>
+    <audio id="bg-audio" loop src="https://www.mboxdrive.com/Tamer%20Hosny%20-%20Bahebak.mp3"></audio>
+
+    <div id="story-screen">
+        <div class="cartoon-card">
+            <img id="img-1" class="story-img" src="https://i.ibb.co/WN7ZxWM7/Screenshot-6012fa4d4ddec268fc5c7112cbb265e7.jpg">
+            <img id="img-2" class="story-img" src="https://i.ibb.co/Rk98J7PP/Screenshot-6012fa4d4ddec268fc5c7112cbb265e7.jpg">
+            <img id="img-3" class="story-img" src="https://i.ibb.co/tpQykgWq/Screenshot-6012fa4d4ddec268fc5c7112cbb265e7.jpg">
+            <h2 id="story-caption" style="font-weight: 900; font-size: 1.3rem; color: var(--dark-text);"></h2>
+        </div>
+    </div>
+
+    <div id="lock-screen">
+        <div class="cartoon-card">
+            <div class="long-message">كل عيد حب وانتي كل حياتي وحبيبتي وروحي يا احلى واجمل حاجه في الدنيا ♥ إنتي مش بس حبيبتي، إنتي دنيتي كلها.. ربنا يخليكي ليا يا حبيبتي. ❤️</div>
+            <input type="password" id="password-input" placeholder="اكتبي الكلمة هنا..." oninput="checkPass(this.value)">
+            <p style="margin-top:10px; font-weight:bold; color: var(--dark-text);">😂 كلمة السر هي اسم الدلع</p>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <div class="message-card">
+            <div class="typing-container" id="dynamic-text"></div>
+            <p id="sub-text" style="display:none; font-weight: 900; font-size: 1.1rem; margin-top: 10px; color: var(--dark-text);">كل عيد حب وإحنا مع بعض يا بطتي ❤️</p>
+        </div>
+
+        <div id="puzzle-section" class="message-card">
+            <p style="font-weight: 900; font-size: 1.2rem; margin-bottom: 20px; color: var(--dark-text);">حلي اللغز ده عشان تشوفي الهدية 😉</p>
+            <div id="sudoku-container" class="sudoku-grid"></div>
+            <button class="check-btn" onclick="validateSudoku()">تحقق من الحل ✨</button>
+        </div>
+
+        <div id="victory-video-container">
+            <div class="video-wrapper">
+                <iframe id="drive-video" src="" allow="autoplay"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div id="win-modal">
+        <div class="cartoon-card" style="box-shadow: none;">
+            <h1 style="font-size: 2rem; margin-bottom: 15px; color: var(--accent-color);">أشطر كتكوتة ❤️</h1>
+            <p style="font-weight: 900; color: var(--dark-text);">كنت عارف إنك شاطرة! يالّا شوفي المفاجأة..</p>
+            <button class="check-btn" style="margin-top: 20px;" onclick="showVideo()"> وريني الهدية ✨</button>
+        </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('bg-audio');
+        let currentSolution = [];
+
+        function toggleTheme() {
+            const body = document.getElementById('body-tag');
+            const btn = document.getElementById('theme-btn');
+            if (body.hasAttribute('data-theme')) {
+                body.removeAttribute('data-theme');
+                btn.innerText = '🌙';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                btn.innerText = '☀️';
+            }
+        }
+
+        async function checkPass(val) {
+            if (val.toUpperCase() === 'KOKA') {
+                audio.play().catch(e => {});
+                document.getElementById('lock-screen').style.opacity = '0';
+                setTimeout(async () => {
+                    document.getElementById('lock-screen').style.display = 'none';
+                    await runStoryMode();
+                }, 500);
+            }
+        }
+
+        async function runStoryMode() {
+            const storyScreen = document.getElementById('story-screen');
+            const caption = document.getElementById('story-caption');
+            const images = [
+                { id: 'img-1', text: "بحبك.. ومن قلبي بحبك ❤️" },
+                { id: 'img-2', text: "وماقدرش أعيش من غيرك.. يا روحي ✨" },
+                { id: 'img-3', text: "وخليني في حضنك.. خليني 💍" }
+            ];
+            storyScreen.style.display = 'flex';
+            for (let i = 0; i < images.length; i++) {
+                const img = document.getElementById(images[i].id);
+                img.style.display = 'block';
+                caption.innerText = images[i].text;
+                await new Promise(r => setTimeout(r, 2800));
+                if (i < images.length - 1) img.style.display = 'none';
+            }
+            storyScreen.style.opacity = '0';
+            setTimeout(() => {
+                storyScreen.style.display = 'none';
+                initMainContent();
+            }, 500);
+        }
+
+        function initMainContent() {
+            document.getElementById('main-content').style.display = 'block';
+            generateRandomSudoku();
+            startTypingSequence();
+            startHearts();
+        }
+
+        function generateRandomSudoku() {
+            const container = document.getElementById('sudoku-container');
+            container.innerHTML = '';
+            let base = [[1,2,3,4],[3,4,1,2],[2,3,4,1],[4,1,2,3]];
+            let nums = [1,2,3,4].sort(() => Math.random() - 0.5);
+            currentSolution = base.map(row => row.map(cell => nums[cell-1]));
+            for (let r=0; r<4; r++) {
+                for (let c=0; c<4; c++) {
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.className = 'sudoku-cell';
+                    if (Math.random() > 0.6) { 
+                        input.value = currentSolution[r][c]; 
+                        input.disabled = true; 
+                    }
+                    input.id = `cell-${r}-${c}`;
+                    container.appendChild(input);
+                }
+            }
+        }
+
+        function validateSudoku() {
+            let correct = true;
+            for(let r=0; r<4; r++) {
+                for(let c=0; c<4; c++) {
+                    if(document.getElementById(`cell-${r}-${c}`).value != currentSolution[r][c]) correct = false;
+                }
+            }
+            if(correct) {
+                document.getElementById('win-modal').style.display = 'flex';
+            } else { alert("ركزي يا جزمة! 😂❤️"); }
+        }
+
+        function showVideo() {
+            document.getElementById('win-modal').style.display = 'none';
+            document.getElementById('puzzle-section').style.display = 'none';
+            document.getElementById('drive-video').src = "https://drive.google.com/file/d/11M6nmByQP-JTcJZG6NZ8OhlMDx0e7OUt/preview?autoplay=1";
+            document.getElementById('victory-video-container').style.display = 'block';
+            audio.pause();
+        }
+
+        async function startTypingSequence() {
+            const el = document.getElementById('dynamic-text');
+            let t1 = "بحبك يا جزمة 🌝";
+            for(let i=0; i<=t1.length; i++) { el.innerText = t1.slice(0, i); await new Promise(r => setTimeout(r, 100)); }
+            await new Promise(r => setTimeout(r, 1000));
+            for(let i=t1.length; i>=8; i--) { el.innerText = t1.slice(0, i); await new Promise(r => setTimeout(r, 50)); }
+            let t2 = "كوكا 😘";
+            let base = "بحبك يا ";
+            for(let i=0; i<=t2.length; i++) { el.innerText = base + t2.slice(0, i); await new Promise(r => setTimeout(r, 100)); }
+            document.getElementById('sub-text').style.display = 'block';
+        }
+
+        function startHearts() {
+            setInterval(() => {
+                const h = document.createElement('div');
+                h.innerHTML = '💖'; h.className = 'heart';
+                h.style.left = Math.random() * 100 + 'vw';
+                h.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                document.body.appendChild(h);
+                setTimeout(() => h.remove(), 4000);
+            }, 300);
+        }
+    </script>
+</body>
+</html>
